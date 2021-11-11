@@ -1,0 +1,41 @@
+<h1 class="text-center mt-4">Alpha Bloggers</h1>
+<div class="flickr_pagination">
+  <%= will_paginate @clients, :container => false %>
+</div>
+<div class="container">
+  <% @clients.each do |client| %>
+    <div class="row justify-content-md-center">
+      <div class="col-8 mt-4">
+        <div class="card text-center shadow mb-5 bg-white rounded">
+          <div class="card-header font-italic">
+            <%= link_to client.username, client %>
+          </div>
+          <div class="card-body">
+            <h5 class="card-title">
+              <%= link_to gravatar_for(client, size: 150), client %>
+            </h5>
+            <p class="card-text"><%= pluralize(client.articles.count, "article") %></p>
+            <%= link_to "View profile", client, class: "btn btn-outline-success" %>
+            <% if logged_in? %>
+              <% if client == current_client %>
+                <%= link_to "Edit profile", edit_user_path(client), class: "btn btn-outline-info" %>
+              <% end %>
+              <% if current_client.admin? %>
+                <%= link_to "Delete user", client_path(client), class: "btn btn-outline-danger", method: :delete,
+                data: {confirm: "Are you sure you want to delete the user account and all associated articles?"} %>
+              <% end %>
+            <%end%>
+          </div>
+  
+          <div class="card-footer text-muted">
+            <small>Joined <%= time_ago_in_words(client.created_at) %> ago</small>
+          </div>
+        </div>
+      </div>
+    </div>
+  <% end %>
+</div>
+
+<div class="flickr_pagination mb-4">
+  <%= will_paginate @articles, :container => false %>
+</div>
